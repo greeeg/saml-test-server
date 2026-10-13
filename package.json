@@ -1,0 +1,60 @@
+{
+  "name": "saml-idp-test-server",
+  "version": "1.0.0",
+  "description": "Test SAML 2.0 Identity Provider (IdP) for E2E tests",
+  "private": false,
+  "type": "module",
+  "license": "MIT",
+  "keywords": [
+    "saml",
+    "idp",
+    "e2e",
+    "hono"
+  ],
+  "engines": {
+    "node": ">=20"
+  },
+  "main": "./dist/index.js",
+  "types": "./dist/types/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/types/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "bin": {
+    "saml-idp": "./dist/cli.js"
+  },
+  "files": [
+    "dist",
+    "assets",
+    "LICENSE*"
+  ],
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build && tsc -p tsconfig.build.json",
+    "prepare": "npm run build",
+    "typecheck": "tsc --noEmit",
+    "start": "node dist/cli.js",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@hono/node-server": "^1.19.0",
+    "@xmldom/xmldom": "^0.9.8",
+    "commander": "^14.0.0",
+    "hono": "^4.9.0",
+    "picocolors": "^1.1.1",
+    "xml-crypto": "^6.1.2",
+    "xml-encryption": "^3.1.0",
+    "xml-formatter": "^3.6.6",
+    "xml-name-validator": "^5.0.0",
+    "xpath": "^0.0.34"
+  },
+  "devDependencies": {
+    "@hono/vite-dev-server": "^0.20.0",
+    "@types/node": "^22.0.0",
+    "typescript": "^5.9.0",
+    "vite": "^7.0.0",
+    "vitest": "^5.0.4"
+  }
+}
