@@ -1,5 +1,5 @@
 {
-  "name": "saml-idp-test-server",
+  "name": "saml-test-server",
   "version": "1.0.0",
   "description": "Test SAML 2.0 Identity Provider (IdP) for E2E tests",
   "private": false,

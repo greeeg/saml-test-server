@@ -1,4 +1,4 @@
-# saml-idp-test-server
+# saml-test-server
 
 A simple SAML 2.0 Identity Provider (IdP) to test Service Providers (SPs) in **E2E tests**.
 
@@ -7,7 +7,7 @@ A simple SAML 2.0 Identity Provider (IdP) to test Service Providers (SPs) in **E
 ## Usage
 
 ```ts
-import { runServer } from 'saml-idp-test-server';
+import { runServer } from 'saml-test-server';
 
 export default async function globalSetup() {
   const idp = await runServer({
@@ -49,7 +49,7 @@ await runServer({
 ### In-process (no port)
 
 ```ts
-import { createIdp } from 'saml-idp-test-server';
+import { createIdp } from 'saml-test-server';
 
 const { app, state } = await createIdp({ acsUrl, audience, logLevel: 'silent' });
 const res = await app.request('/metadata');
