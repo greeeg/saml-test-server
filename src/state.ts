@@ -1,15 +1,15 @@
-import type { UserProfile } from './default-config.js';
-import type { ResolvedOptions } from './options.js';
-import type { ClaimMetadata } from './vendor/samlp/index.js';
-import type { DigestAlgorithm, SignatureAlgorithm } from './vendor/saml/sign.js';
+import type { UserProfile } from "./default-config.js";
+import type { ResolvedOptions } from "./options.js";
+import type { ClaimMetadata } from "./vendor/samlp/index.js";
+import type { DigestAlgorithm, SignatureAlgorithm } from "./vendor/saml/sign.js";
 
 export const IDP_PATHS = {
-  SSO: '/saml/sso',
-  SLO: '/saml/slo',
-  METADATA: '/metadata',
-  SIGN_IN: '/signin',
-  SIGN_OUT: '/signout',
-  SETTINGS: '/settings',
+  SSO: "/saml/sso",
+  SLO: "/saml/slo",
+  METADATA: "/metadata",
+  SIGN_IN: "/signin",
+  SIGN_OUT: "/signout",
+  SETTINGS: "/settings",
 } as const;
 
 /** IdP settings. They can be changed at runtime from the settings page (or by tests). */
@@ -63,14 +63,14 @@ function initialSettings(options: ResolvedOptions): IdpSettings {
     sloUrl: options.sloUrl,
     RelayState: options.relayState,
     allowRequestAcsUrl: !options.disableRequestAcsUrl,
-    digestAlgorithm: 'sha256',
-    signatureAlgorithm: 'rsa-sha256',
+    digestAlgorithm: "sha256",
+    signatureAlgorithm: "rsa-sha256",
     signResponse: options.signResponse,
     encryptAssertion: options.encryptAssertion,
     encryptionCert: options.encryptionCert,
     encryptionPublicKey: options.encryptionPublicKey,
-    encryptionAlgorithm: 'http://www.w3.org/2001/04/xmlenc#aes256-cbc',
-    keyEncryptionAlgorithm: 'http://www.w3.org/2001/04/xmlenc#rsa-oaep-mgf1p',
+    encryptionAlgorithm: "http://www.w3.org/2001/04/xmlenc#aes256-cbc",
+    keyEncryptionAlgorithm: "http://www.w3.org/2001/04/xmlenc#rsa-oaep-mgf1p",
     lifetimeInSeconds: 3600,
     authnContextClassRef: options.authnContextClassRef,
     authnContextDecl: options.authnContextDecl,

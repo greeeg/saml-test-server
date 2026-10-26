@@ -1,27 +1,15 @@
 {
   "name": "saml-test-server",
   "version": "1.0.0",
-  "description": "Test SAML 2.0 Identity Provider (IdP) for E2E tests",
   "private": false,
-  "type": "module",
-  "license": "MIT",
+  "description": "Test SAML 2.0 Identity Provider (IdP) for E2E tests",
   "keywords": [
-    "saml",
-    "idp",
     "e2e",
-    "hono"
+    "hono",
+    "idp",
+    "saml"
   ],
-  "engines": {
-    "node": ">=20"
-  },
-  "main": "./dist/index.js",
-  "types": "./dist/types/index.d.ts",
-  "exports": {
-    ".": {
-      "types": "./dist/types/index.d.ts",
-      "import": "./dist/index.js"
-    }
-  },
+  "license": "MIT",
   "bin": {
     "saml-idp": "./dist/cli.js"
   },
@@ -30,13 +18,26 @@
     "assets",
     "LICENSE*"
   ],
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/types/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/types/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
   "scripts": {
     "dev": "vite",
     "build": "vite build && tsc -p tsconfig.build.json",
-    "prepare": "npm run build",
+    "prepare": "lefthook install || true && npm run build",
     "typecheck": "tsc --noEmit",
     "start": "node dist/cli.js",
-    "test": "vitest run"
+    "test": "vitest run",
+    "lint": "oxlint .",
+    "lint:fix": "oxlint --fix .",
+    "format": "oxfmt .",
+    "format:check": "oxfmt --check ."
   },
   "dependencies": {
     "@hono/node-server": "^1.19.0",
@@ -53,8 +54,14 @@
   "devDependencies": {
     "@hono/vite-dev-server": "^0.20.0",
     "@types/node": "^22.0.0",
+    "lefthook": "2.2.2",
+    "oxfmt": "0.74.0",
+    "oxlint": "1.89.0",
     "typescript": "^5.9.0",
     "vite": "^7.0.0",
     "vitest": "^5.0.4"
+  },
+  "engines": {
+    "node": ">=20"
   }
 }

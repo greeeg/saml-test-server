@@ -1,9 +1,9 @@
-import { randomBytes } from 'node:crypto';
-import type { MiddlewareHandler } from 'hono';
-import { deleteCookie, getSignedCookie, setSignedCookie } from 'hono/cookie';
-import type { LogoutStore } from './vendor/samlp/index.js';
+import { randomBytes } from "node:crypto";
+import type { MiddlewareHandler } from "hono";
+import { deleteCookie, getSignedCookie, setSignedCookie } from "hono/cookie";
+import type { LogoutStore } from "./vendor/samlp/index.js";
 
-export const SESSION_COOKIE = 'idp_sid';
+export const SESSION_COOKIE = "idp_sid";
 const MAX_AGE_SECONDS = 60 * 60;
 
 /** Server-side session of the browser (identified by a signed cookie). */
@@ -29,7 +29,7 @@ export class Session {
   /** Replaces the session id (and drops the data), like express-session's `regenerate()`. */
   regenerate(): void {
     this.store.delete(this.id);
-    this.id = randomBytes(24).toString('hex');
+    this.id = randomBytes(24).toString("hex");
     this.data = {};
     this.destroyed = false;
     this.store.set(this);
@@ -46,7 +46,7 @@ export class SessionStore {
   private readonly entries = new Map<string, Entry>();
 
   create(): Session {
-    const session = new Session(randomBytes(24).toString('hex'), this);
+    const session = new Session(randomBytes(24).toString("hex"), this);
     this.set(session);
     return session;
   }
@@ -86,19 +86,19 @@ export function sessionMiddleware(
   return async (c, next) => {
     const cookieId = await getSignedCookie(c, secret, SESSION_COOKIE);
     const session = (cookieId ? store.get(cookieId) : undefined) ?? store.create();
-    c.set('session', session);
+    c.set("session", session);
 
     await next();
 
     if (session.destroyed) {
-      deleteCookie(c, SESSION_COOKIE, { path: '/' });
+      deleteCookie(c, SESSION_COOKIE, { path: "/" });
       return;
     }
     store.set(session); // sliding expiration
     await setSignedCookie(c, SESSION_COOKIE, session.id, secret, {
-      path: '/',
+      path: "/",
       httpOnly: true,
-      sameSite: 'Lax',
+      sameSite: "Lax",
       maxAge: MAX_AGE_SECONDS,
     });
   };
@@ -119,7 +119,7 @@ export function createLogoutStore(session: Session): LogoutStore {
   const bag = (): Record<string, any> => (session.data._logoutState ??= {});
   return {
     save(state) {
-      const handle = randomBytes(16).toString('hex');
+      const handle = randomBytes(16).toString("hex");
       bag()[handle] = state;
       return handle;
     },

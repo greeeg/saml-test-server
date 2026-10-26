@@ -1,8 +1,8 @@
-import type { FC } from 'hono/jsx';
-import type { UserProfile } from '../default-config.js';
-import { IDP_PATHS, type IdpSettings } from '../state.js';
-import type { ClaimMetadata } from '../vendor/samlp/index.js';
-import { Layout } from './Layout.js';
+import type { FC } from "hono/jsx";
+import type { UserProfile } from "../default-config.js";
+import { IDP_PATHS, type IdpSettings } from "../state.js";
+import type { ClaimMetadata } from "../vendor/samlp/index.js";
+import { Layout } from "./Layout.js";
 
 export interface AuthnRequestInfo {
   relayState?: string;
@@ -22,16 +22,20 @@ export interface UserPageProps {
 }
 
 const NAME_ID_FORMATS = [
-  'urn:oasis:names:tc:SAML:1.1:nameid-format:emailAddress',
-  'urn:oasis:names:tc:SAML:1.1:nameid-format:unspecified',
-  'urn:oasis:names:tc:SAML:2.0:nameid-format:persistent',
-  'urn:oasis:names:tc:SAML:2.0:nameid-format:transient',
-  'urn:oasis:names:tc:SAML:1.1:nameid-format:X509SubjectName',
-  'urn:oasis:names:tc:SAML:1.1:nameid-format:WindowsDomainQualifiedName',
-  'urn:oasis:names:tc:SAML:2.0:nameid-format:kerberos',
+  "urn:oasis:names:tc:SAML:1.1:nameid-format:emailAddress",
+  "urn:oasis:names:tc:SAML:1.1:nameid-format:unspecified",
+  "urn:oasis:names:tc:SAML:2.0:nameid-format:persistent",
+  "urn:oasis:names:tc:SAML:2.0:nameid-format:transient",
+  "urn:oasis:names:tc:SAML:1.1:nameid-format:X509SubjectName",
+  "urn:oasis:names:tc:SAML:1.1:nameid-format:WindowsDomainQualifiedName",
+  "urn:oasis:names:tc:SAML:2.0:nameid-format:kerberos",
 ];
 
-const StaticRow: FC<{ id: string; label: string; value?: string | boolean }> = ({ id, label, value }) => (
+const StaticRow: FC<{ id: string; label: string; value?: string | boolean }> = ({
+  id,
+  label,
+  value,
+}) => (
   <div class="row">
     <span class="label">{label}</span>
     <div class="field">
@@ -51,7 +55,9 @@ const AuthnRequestPanel: FC<{ authnRequest: AuthnRequestInfo }> = ({ authnReques
       {authnRequest.destination ? (
         <StaticRow id="destination" label="Destination" value={authnRequest.destination} />
       ) : null}
-      {authnRequest.acsUrl ? <StaticRow id="acsUrl" label="ACS URL" value={authnRequest.acsUrl} /> : null}
+      {authnRequest.acsUrl ? (
+        <StaticRow id="acsUrl" label="ACS URL" value={authnRequest.acsUrl} />
+      ) : null}
       {authnRequest.forceAuthn ? (
         <StaticRow id="forceAuthn" label="ForceAuthn" value={authnRequest.forceAuthn} />
       ) : null}
@@ -75,14 +81,26 @@ const AttributeField: FC<{ entry: ClaimMetadata; value?: string }> = ({ entry, v
           ))}
         </select>
       ) : (
-        <input id={entry.id} name={entry.id} type="text" placeholder="Attribute value" value={value ?? ''} />
+        <input
+          id={entry.id}
+          name={entry.id}
+          type="text"
+          placeholder="Attribute value"
+          value={value ?? ""}
+        />
       )}
       {entry.multiValue ? <p class="hint">Multiple values are separated by commas</p> : null}
     </div>
   </div>
 );
 
-export const UserPage: FC<UserPageProps> = ({ user, sessionIndex, metadata, authnRequest, idp }) => (
+export const UserPage: FC<UserPageProps> = ({
+  user,
+  sessionIndex,
+  metadata,
+  authnRequest,
+  idp,
+}) => (
   <Layout issuer={idp.issuer}>
     {authnRequest?.id ? <AuthnRequestPanel authnRequest={authnRequest} /> : null}
 
@@ -93,7 +111,13 @@ export const UserPage: FC<UserPageProps> = ({ user, sessionIndex, metadata, auth
           <div class="row">
             <label for="userName">Subject NameID</label>
             <div class="field">
-              <input id="userName" name="userName" placeholder="user@example.com" required value={user.userName} />
+              <input
+                id="userName"
+                name="userName"
+                placeholder="user@example.com"
+                required
+                value={user.userName}
+              />
             </div>
           </div>
           <details>
@@ -113,19 +137,34 @@ export const UserPage: FC<UserPageProps> = ({ user, sessionIndex, metadata, auth
             <div class="row">
               <label for="nameIdNameQualifier">Name Qualifier</label>
               <div class="field">
-                <input id="nameIdNameQualifier" name="nameIdNameQualifier" type="text" value={user.nameIdNameQualifier ?? ''} />
+                <input
+                  id="nameIdNameQualifier"
+                  name="nameIdNameQualifier"
+                  type="text"
+                  value={user.nameIdNameQualifier ?? ""}
+                />
               </div>
             </div>
             <div class="row">
               <label for="nameIdSPNameQualifier">Service Provider Name Qualifier</label>
               <div class="field">
-                <input id="nameIdSPNameQualifier" name="nameIdSPNameQualifier" type="text" value={user.nameIdSPNameQualifier ?? ''} />
+                <input
+                  id="nameIdSPNameQualifier"
+                  name="nameIdSPNameQualifier"
+                  type="text"
+                  value={user.nameIdSPNameQualifier ?? ""}
+                />
               </div>
             </div>
             <div class="row">
               <label for="nameIdSPProvidedID">Service Provider Provided ID</label>
               <div class="field">
-                <input id="nameIdSPProvidedID" name="nameIdSPProvidedID" type="text" value={user.nameIdSPProvidedID ?? ''} />
+                <input
+                  id="nameIdSPProvidedID"
+                  name="nameIdSPProvidedID"
+                  type="text"
+                  value={user.nameIdSPProvidedID ?? ""}
+                />
               </div>
             </div>
           </details>
@@ -136,7 +175,11 @@ export const UserPage: FC<UserPageProps> = ({ user, sessionIndex, metadata, auth
         <summary>Authentication Statement</summary>
         <div class="panel-body">
           <StaticRow id="sessionIndex" label="Session Index" value={sessionIndex} />
-          <StaticRow id="authnContextClassRef" label="Authentication Context Class" value={idp.authnContextClassRef} />
+          <StaticRow
+            id="authnContextClassRef"
+            label="Authentication Context Class"
+            value={idp.authnContextClassRef}
+          />
         </div>
       </details>
 
@@ -153,7 +196,7 @@ export const UserPage: FC<UserPageProps> = ({ user, sessionIndex, metadata, auth
         <input
           name="_authnRequest"
           type="hidden"
-          value={Buffer.from(JSON.stringify(authnRequest)).toString('base64')}
+          value={Buffer.from(JSON.stringify(authnRequest)).toString("base64")}
         />
       ) : null}
 

@@ -1,26 +1,26 @@
-import { createServer as createHttpsServer } from 'node:https';
-import type { AddressInfo } from 'node:net';
-import { hostname as osHostname } from 'node:os';
-import type { Server } from 'node:http';
-import { serve } from '@hono/node-server';
-import type { Hono } from 'hono';
-import { createApp } from './app.js';
-import { configBanner, createLogger, listeningBanner, type Logger } from './log.js';
-import { resolveOptions, type IdpOptions, type ResolvedOptions } from './options.js';
-import type { SessionVariables } from './session.js';
-import { createState, type IdpState } from './state.js';
-import pc from 'picocolors';
+import { createServer as createHttpsServer } from "node:https";
+import type { AddressInfo } from "node:net";
+import { hostname as osHostname } from "node:os";
+import type { Server } from "node:http";
+import { serve } from "@hono/node-server";
+import type { Hono } from "hono";
+import { createApp } from "./app.js";
+import { configBanner, createLogger, listeningBanner, type Logger } from "./log.js";
+import { resolveOptions, type IdpOptions, type ResolvedOptions } from "./options.js";
+import type { SessionVariables } from "./session.js";
+import { createState, type IdpState } from "./state.js";
+import pc from "picocolors";
 
-export { OptionsError } from './options.js';
-export type { IdpOptions, ResolvedOptions, PemOrPath } from './options.js';
-export type { LogLevel } from './log.js';
-export { createDefaultConfig } from './default-config.js';
-export type { IdpConfig, UserProfile } from './default-config.js';
-export { IDP_PATHS } from './state.js';
-export type { IdpSettings, IdpState } from './state.js';
-export type { ClaimMetadata } from './vendor/samlp/index.js';
+export { OptionsError } from "./options.js";
+export type { IdpOptions, ResolvedOptions, PemOrPath } from "./options.js";
+export type { LogLevel } from "./log.js";
+export { createDefaultConfig } from "./default-config.js";
+export type { IdpConfig, UserProfile } from "./default-config.js";
+export { IDP_PATHS } from "./state.js";
+export type { IdpSettings, IdpState } from "./state.js";
+export type { ClaimMetadata } from "./vendor/samlp/index.js";
 
-const WILDCARD_ADDRESSES = ['0.0.0.0', '::'];
+const WILDCARD_ADDRESSES = ["0.0.0.0", "::"];
 
 export interface Idp {
   /** The Hono application. Use `app.request()` / `app.fetch` to call it without a network port. */
@@ -77,12 +77,12 @@ export async function runServer(input: IdpOptions): Promise<RunningIdp> {
       },
       () => resolve(instance as Server),
     ) as Server;
-    instance.once('error', reject);
+    instance.once("error", reject);
   });
 
   const { address, port } = server.address() as AddressInfo;
-  const scheme = options.https ? 'https' : 'http';
-  const bannerHost = WILDCARD_ADDRESSES.includes(address) ? osHostname() : 'localhost';
+  const scheme = options.https ? "https" : "http";
+  const bannerHost = WILDCARD_ADDRESSES.includes(address) ? osHostname() : "localhost";
   const url = `${scheme}://localhost:${port}`;
   logger.log(listeningBanner(`${scheme}://${bannerHost}:${port}`, !!options.sloUrl));
 

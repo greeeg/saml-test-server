@@ -1,5 +1,5 @@
-import type { FC } from 'hono/jsx';
-import { Layout } from './Layout.js';
+import type { FC } from "hono/jsx";
+import { Layout } from "./Layout.js";
 
 export interface ErrorPageProps {
   message: string;

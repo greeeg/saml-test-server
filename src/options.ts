@@ -1,17 +1,17 @@
-import { existsSync, readFileSync } from 'node:fs';
-import { homedir } from 'node:os';
-import { isAbsolute, resolve } from 'node:path';
-import { fileURLToPath, pathToFileURL } from 'node:url';
-import { createDefaultConfig, type IdpConfig } from './default-config.js';
-import { isLogLevel, LOG_LEVELS, type LogLevel } from './log.js';
+import { existsSync, readFileSync } from "node:fs";
+import { homedir } from "node:os";
+import { isAbsolute, resolve } from "node:path";
+import { fileURLToPath, pathToFileURL } from "node:url";
+import { createDefaultConfig, type IdpConfig } from "./default-config.js";
+import { isLogLevel, LOG_LEVELS, type LogLevel } from "./log.js";
 
 /** Root of the package (works from `src/` and from the built `dist/`). */
-export const PACKAGE_ROOT = fileURLToPath(new URL('..', import.meta.url));
+export const PACKAGE_ROOT = fileURLToPath(new URL("..", import.meta.url));
 
-const DEFAULT_CERT_PATH = resolve(PACKAGE_ROOT, 'assets/idp-public-cert.pem');
-const DEFAULT_KEY_PATH = resolve(PACKAGE_ROOT, 'assets/idp-private-key.pem');
+const DEFAULT_CERT_PATH = resolve(PACKAGE_ROOT, "assets/idp-public-cert.pem");
+const DEFAULT_KEY_PATH = resolve(PACKAGE_ROOT, "assets/idp-private-key.pem");
 /** Special `configFile` value that selects the built-in default user + metadata. */
-export const DEFAULT_CONFIG_FILE = 'saml-idp/config.js';
+export const DEFAULT_CONFIG_FILE = "saml-idp/config.js";
 
 export const KEY_CERT_HELP_TEXT = `To generate a key/cert pair for the IdP, run the following command:
 
@@ -23,8 +23,8 @@ export const KEY_CERT_HELP_TEXT = `To generate a key/cert pair for the IdP, run 
 const CRYPT_TYPES = {
   certificate: /-----BEGIN CERTIFICATE-----[^-]*-----END CERTIFICATE-----/,
   // PKCS#1 (RSA PRIVATE KEY) and PKCS#8 (PRIVATE KEY)
-  'private key': /-----BEGIN (?:RSA )?PRIVATE KEY-----[^-]*-----END (?:RSA )?PRIVATE KEY-----/,
-  'public key': /-----BEGIN (?:RSA )?PUBLIC KEY-----[^-]*-----END (?:RSA )?PUBLIC KEY-----/,
+  "private key": /-----BEGIN (?:RSA )?PRIVATE KEY-----[^-]*-----END (?:RSA )?PRIVATE KEY-----/,
+  "public key": /-----BEGIN (?:RSA )?PUBLIC KEY-----[^-]*-----END (?:RSA )?PUBLIC KEY-----/,
 } as const;
 
 type CryptType = keyof typeof CRYPT_TYPES;
@@ -33,7 +33,7 @@ type CryptType = keyof typeof CRYPT_TYPES;
 export class OptionsError extends Error {
   constructor(message: string) {
     super(message);
-    this.name = 'OptionsError';
+    this.name = "OptionsError";
   }
 }
 
@@ -132,13 +132,13 @@ export function matchesCertType(value: string, type: CryptType): boolean {
 
 /** Resolves a file path option, the same way the original `saml-idp` did. */
 export function resolveFilePath(filePath: string): string | undefined {
-  if (filePath.startsWith('saml-idp/')) {
+  if (filePath.startsWith("saml-idp/")) {
     // Allows file path options to files included in this package
-    const resolved = resolve(PACKAGE_ROOT, filePath.replace(/^saml-idp\//, ''));
+    const resolved = resolve(PACKAGE_ROOT, filePath.replace(/^saml-idp\//, ""));
     return existsSync(resolved) ? resolved : undefined;
   }
   if (isAbsolute(filePath) && existsSync(filePath)) return filePath;
-  if (filePath.startsWith('~/')) {
+  if (filePath.startsWith("~/")) {
     const expanded = resolve(process.env.HOME ?? homedir(), filePath.slice(2));
     return existsSync(expanded) ? expanded : undefined;
   }
@@ -160,13 +160,15 @@ export function coerceCertFile(
   }
   const filePath = resolveFilePath(asString);
   if (filePath) {
-    const content = readFileSync(filePath, 'utf8');
+    const content = readFileSync(filePath, "utf8");
     if (matchesCertType(content, type)) return content;
-    throw new OptionsError(`Invalid ${description}: "${filePath}" does not contain a valid ${type}`);
+    throw new OptionsError(
+      `Invalid ${description}: "${filePath}" does not contain a valid ${type}`,
+    );
   }
   throw new OptionsError(
     `Invalid / missing ${description} - not a valid crypt key/cert or file path` +
-      (helpText ? '\n' + helpText : ''),
+      (helpText ? "\n" + helpText : ""),
   );
 }
 
@@ -178,8 +180,8 @@ async function loadConfigFile(configFile: string): Promise<Partial<IdpConfig>> {
     throw new OptionsError(`SAML attribute config file path "${configFile}" is not a valid path.`);
   }
   try {
-    if (filePath.endsWith('.json')) {
-      return JSON.parse(readFileSync(filePath, 'utf8'));
+    if (filePath.endsWith(".json")) {
+      return JSON.parse(readFileSync(filePath, "utf8"));
     }
     const mod = await import(/* @vite-ignore */ pathToFileURL(filePath).href);
     return (mod.default?.user || mod.default?.metadata ? mod.default : mod) as Partial<IdpConfig>;
@@ -191,59 +193,64 @@ async function loadConfigFile(configFile: string): Promise<Partial<IdpConfig>> {
 }
 
 function coerceAuthnContextDecl(value: string): string {
-  if (value.trimStart().startsWith('<')) return value;
+  if (value.trimStart().startsWith("<")) return value;
   const filePath = resolveFilePath(value);
   if (!filePath) {
     throw new OptionsError(`Authentication Context Declaration file "${value}" was not found.`);
   }
-  return readFileSync(filePath, 'utf8');
+  return readFileSync(filePath, "utf8");
 }
 
 /** Validates the options, applies defaults and reads certificates / config files. */
 export async function resolveOptions(options: IdpOptions): Promise<ResolvedOptions> {
-  if (!options.acsUrl) throw new OptionsError('Missing required option: acsUrl');
-  if (!options.audience) throw new OptionsError('Missing required option: audience');
+  if (!options.acsUrl) throw new OptionsError("Missing required option: acsUrl");
+  if (!options.audience) throw new OptionsError("Missing required option: audience");
 
   const encryptAssertion = options.encryptAssertion ?? false;
   if (encryptAssertion && options.encryptionCert === undefined) {
-    throw new OptionsError('encryptionCert argument is required for assertion encryption');
+    throw new OptionsError("encryptionCert argument is required for assertion encryption");
   }
 
-  const logLevel = options.logLevel ?? (options.silent ? 'silent' : process.env.SAML_IDP_LOG_LEVEL ?? 'info');
+  const logLevel =
+    options.logLevel ?? (options.silent ? "silent" : (process.env.SAML_IDP_LOG_LEVEL ?? "info"));
   if (!isLogLevel(logLevel)) {
-    throw new OptionsError(`Invalid logLevel "${logLevel}", expected one of: ${LOG_LEVELS.join(', ')}`);
+    throw new OptionsError(
+      `Invalid logLevel "${logLevel}", expected one of: ${LOG_LEVELS.join(", ")}`,
+    );
   }
 
   const https = options.https ?? false;
   if (https && (options.httpsPrivateKey === undefined || options.httpsCert === undefined)) {
-    throw new OptionsError('httpsPrivateKey and httpsCert arguments are required to enable HTTPS');
+    throw new OptionsError("httpsPrivateKey and httpsCert arguments are required to enable HTTPS");
   }
 
-  const fileConfig = options.config ? {} : await loadConfigFile(options.configFile ?? DEFAULT_CONFIG_FILE);
+  const fileConfig = options.config
+    ? {}
+    : await loadConfigFile(options.configFile ?? DEFAULT_CONFIG_FILE);
   const inlineConfig = options.config ?? fileConfig;
   const defaults = createDefaultConfig();
   const config: IdpConfig = {
     // the user is merged with the defaults so that a partial profile still has a NameID
-    user: { ...defaults.user, ...(inlineConfig.user ?? {}) },
+    user: { ...defaults.user, ...inlineConfig.user },
     metadata: inlineConfig.metadata ?? defaults.metadata,
   };
 
   return {
-    host: options.host ?? 'localhost',
+    host: options.host ?? "localhost",
     port: options.port ?? 7000,
     cert: coerceCertFile(
       options.cert ?? DEFAULT_CERT_PATH,
-      'certificate',
-      'IdP Signature PublicKey Certificate',
+      "certificate",
+      "IdP Signature PublicKey Certificate",
       KEY_CERT_HELP_TEXT,
     ),
     key: coerceCertFile(
       options.key ?? DEFAULT_KEY_PATH,
-      'private key',
-      'IdP Signature PrivateKey Certificate',
+      "private key",
+      "IdP Signature PrivateKey Certificate",
       KEY_CERT_HELP_TEXT,
     ),
-    issuer: options.issuer ?? 'urn:example:idp',
+    issuer: options.issuer ?? "urn:example:idp",
     acsUrl: options.acsUrl,
     sloUrl: options.sloUrl,
     audience: options.audience,
@@ -253,26 +260,29 @@ export async function resolveOptions(options: IdpOptions): Promise<ResolvedOptio
     encryptAssertion,
     encryptionCert:
       options.encryptionCert !== undefined
-        ? coerceCertFile(options.encryptionCert, 'certificate', 'Encryption cert')
+        ? coerceCertFile(options.encryptionCert, "certificate", "Encryption cert")
         : undefined,
     encryptionPublicKey:
       options.encryptionPublicKey !== undefined
-        ? coerceCertFile(options.encryptionPublicKey, 'public key', 'Encryption public key')
+        ? coerceCertFile(options.encryptionPublicKey, "public key", "Encryption public key")
         : undefined,
     httpsPrivateKey:
       options.httpsPrivateKey !== undefined
-        ? coerceCertFile(options.httpsPrivateKey, 'private key', 'Web Server TLS/SSL Private Key')
+        ? coerceCertFile(options.httpsPrivateKey, "private key", "Web Server TLS/SSL Private Key")
         : undefined,
     httpsCert:
       options.httpsCert !== undefined
-        ? coerceCertFile(options.httpsCert, 'certificate', 'Web Server TLS/SSL Certificate')
+        ? coerceCertFile(options.httpsCert, "certificate", "Web Server TLS/SSL Certificate")
         : undefined,
     https,
     signResponse: options.signResponse ?? true,
     rollSession: options.rollSession ?? false,
     authnContextClassRef:
-      options.authnContextClassRef ?? 'urn:oasis:names:tc:SAML:2.0:ac:classes:PasswordProtectedTransport',
-    authnContextDecl: options.authnContextDecl ? coerceAuthnContextDecl(options.authnContextDecl) : undefined,
+      options.authnContextClassRef ??
+      "urn:oasis:names:tc:SAML:2.0:ac:classes:PasswordProtectedTransport",
+    authnContextDecl: options.authnContextDecl
+      ? coerceAuthnContextDecl(options.authnContextDecl)
+      : undefined,
     logLevel,
     config,
   };

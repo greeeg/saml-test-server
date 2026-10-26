@@ -1,5 +1,5 @@
 // Ported from saml-idp/lib/simpleProfileMapper.js (MIT, see ../LICENSE).
-import type { Attributes, ClaimMetadata, ProfileMapper } from './vendor/samlp/index.js';
+import type { Attributes, ClaimMetadata, ProfileMapper } from "./vendor/samlp/index.js";
 
 type User = Record<string, string | undefined>;
 
@@ -20,10 +20,10 @@ export function createSimpleProfileMapper(getMetadata: () => ClaimMetadata[]): P
       for (const entry of getMetadata()) {
         const value = user[entry.id];
         claims[entry.id] = entry.multiValue
-          ? (value ?? '')
-              .split(',')
+          ? (value ?? "")
+              .split(",")
               .map((v) => v.trim())
-              .filter((v) => v !== '')
+              .filter((v) => v !== "")
           : value;
       }
       return Object.keys(claims).length ? claims : undefined;

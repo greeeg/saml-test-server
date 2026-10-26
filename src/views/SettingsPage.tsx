@@ -1,33 +1,33 @@
-import type { FC, PropsWithChildren } from 'hono/jsx';
-import type { IdpSettings } from '../state.js';
-import { Layout } from './Layout.js';
+import type { FC, PropsWithChildren } from "hono/jsx";
+import type { IdpSettings } from "../state.js";
+import { Layout } from "./Layout.js";
 
 const AUTHN_CONTEXT_CLASSES = [
-  'InternetProtocol',
-  'InternetProtocolPassword',
-  'Kerberos',
-  'MobileOneFactorUnregistered',
-  'MobileTwoFactorUnregistered',
-  'MobileOneFactorContract',
-  'MobileTwoFactorContract',
-  'Password',
-  'PasswordProtectedTransport',
-  'PreviousSession',
-  'X509',
-  'PGP',
-  'SPKI',
-  'XMLDSig',
-  'Smartcard',
-  'SmartcardPKI',
-  'SoftwarePKI',
-  'Telephony',
-  'NomadTelephony',
-  'PersonalTelephony',
-  'AuthenticatedTelephony',
-  'SecureRemotePassword',
-  'TLSClient',
-  'TimeSyncToken',
-  'unspecified',
+  "InternetProtocol",
+  "InternetProtocolPassword",
+  "Kerberos",
+  "MobileOneFactorUnregistered",
+  "MobileTwoFactorUnregistered",
+  "MobileOneFactorContract",
+  "MobileTwoFactorContract",
+  "Password",
+  "PasswordProtectedTransport",
+  "PreviousSession",
+  "X509",
+  "PGP",
+  "SPKI",
+  "XMLDSig",
+  "Smartcard",
+  "SmartcardPKI",
+  "SoftwarePKI",
+  "Telephony",
+  "NomadTelephony",
+  "PersonalTelephony",
+  "AuthenticatedTelephony",
+  "SecureRemotePassword",
+  "TLSClient",
+  "TimeSyncToken",
+  "unspecified",
 ].map((name) => ({ value: `urn:oasis:names:tc:SAML:2.0:ac:classes:${name}`, label: name }));
 
 const Row: FC<PropsWithChildren<{ id: string; label: string }>> = ({ id, label, children }) => (
@@ -53,8 +53,8 @@ const Select: FC<{
 );
 
 const YES_NO = [
-  { value: 'true', label: 'Yes' },
-  { value: 'false', label: 'No' },
+  { value: "true", label: "Yes" },
+  { value: "false", label: "No" },
 ];
 
 export const SettingsPage: FC<{ idp: IdpSettings }> = ({ idp }) => (
@@ -71,8 +71,8 @@ export const SettingsPage: FC<{ idp: IdpSettings }> = ({ idp }) => (
               id="signatureAlgorithm"
               selected={idp.signatureAlgorithm}
               options={[
-                { value: 'rsa-sha1', label: 'RSA-SHA1' },
-                { value: 'rsa-sha256', label: 'RSA-SHA256' },
+                { value: "rsa-sha1", label: "RSA-SHA1" },
+                { value: "rsa-sha256", label: "RSA-SHA256" },
               ]}
             />
           </Row>
@@ -81,8 +81,8 @@ export const SettingsPage: FC<{ idp: IdpSettings }> = ({ idp }) => (
               id="digestAlgorithm"
               selected={idp.digestAlgorithm}
               options={[
-                { value: 'sha1', label: 'SHA1' },
-                { value: 'sha256', label: 'SHA256' },
+                { value: "sha1", label: "SHA1" },
+                { value: "sha256", label: "SHA256" },
               ]}
             />
           </Row>
@@ -90,7 +90,13 @@ export const SettingsPage: FC<{ idp: IdpSettings }> = ({ idp }) => (
             <Select id="signResponse" selected={idp.signResponse} options={YES_NO} />
           </Row>
           <Row id="lifetimeInSeconds" label="Assertion Lifetime Seconds">
-            <input id="lifetimeInSeconds" name="lifetimeInSeconds" type="number" required value={idp.lifetimeInSeconds} />
+            <input
+              id="lifetimeInSeconds"
+              name="lifetimeInSeconds"
+              type="number"
+              required
+              value={idp.lifetimeInSeconds}
+            />
           </Row>
           <Row id="authnContextClassRef" label="Authentication Context Class">
             <Select
@@ -109,16 +115,28 @@ export const SettingsPage: FC<{ idp: IdpSettings }> = ({ idp }) => (
         <h3>Service Provider Settings</h3>
         <div class="panel-body">
           <Row id="serviceProviderId" label="Issuer URI">
-            <input id="serviceProviderId" name="serviceProviderId" type="text" required value={idp.serviceProviderId} />
+            <input
+              id="serviceProviderId"
+              name="serviceProviderId"
+              type="text"
+              required
+              value={idp.serviceProviderId}
+            />
           </Row>
           <Row id="sloUrl" label="Single Logout URL">
-            <input id="sloUrl" name="sloUrl" type="url" value={idp.sloUrl ?? ''} />
+            <input id="sloUrl" name="sloUrl" type="url" value={idp.sloUrl ?? ""} />
           </Row>
           <Row id="acsUrl" label="Assertion Consumer Service URL">
             <input id="acsUrl" name="acsUrl" type="url" required value={idp.acsUrl} />
           </Row>
           <Row id="destination" label="Destination">
-            <input id="destination" name="destination" type="url" required value={idp.destination} />
+            <input
+              id="destination"
+              name="destination"
+              type="url"
+              required
+              value={idp.destination}
+            />
           </Row>
           <Row id="recipient" label="Recipient">
             <input id="recipient" name="recipient" type="url" required value={idp.recipient} />
@@ -127,7 +145,7 @@ export const SettingsPage: FC<{ idp: IdpSettings }> = ({ idp }) => (
             <input id="audience" name="audience" type="text" required value={idp.audience} />
           </Row>
           <Row id="relayState" label="Default Relay State">
-            <input id="relayState" name="RelayState" type="text" value={idp.RelayState ?? ''} />
+            <input id="relayState" name="RelayState" type="text" value={idp.RelayState ?? ""} />
           </Row>
         </div>
       </div>

@@ -7,10 +7,6 @@
     "outDir": "dist/types",
     "rootDir": "src"
   },
-  "include": [
-    "src"
-  ],
-  "exclude": [
-    "src/dev.ts"
-  ]
+  "include": ["src"],
+  "exclude": ["src/dev.ts"]
 }

@@ -1,0 +1,13 @@
+pre-commit:
+  # Sequential so lint fixes are applied before formatting
+  commands:
+    lint:
+      priority: 1
+      glob: "*.{js,jsx,mjs,cjs,ts,tsx}"
+      run: npx oxlint --fix {staged_files}
+      stage_fixed: true
+    format:
+      priority: 2
+      glob: "*"
+      run: npx oxfmt --no-error-on-unmatched-pattern {staged_files}
+      stage_fixed: true

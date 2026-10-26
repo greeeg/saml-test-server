@@ -1,6 +1,6 @@
-import { raw } from 'hono/html';
-import type { FC, PropsWithChildren } from 'hono/jsx';
-import { IDP_PATHS } from '../state.js';
+import { raw } from "hono/html";
+import type { FC, PropsWithChildren } from "hono/jsx";
+import { IDP_PATHS } from "../state.js";
 
 const STYLES = `
   :root { color-scheme: light; }
@@ -29,7 +29,7 @@ const STYLES = `
 
 export const Layout: FC<PropsWithChildren<{ issuer?: string }>> = ({ issuer, children }) => (
   <>
-    {raw('<!DOCTYPE html>')}
+    {raw("<!DOCTYPE html>")}
     <html lang="en">
       <head>
         <meta charset="utf-8" />
@@ -40,7 +40,7 @@ export const Layout: FC<PropsWithChildren<{ issuer?: string }>> = ({ issuer, chi
       <body>
         <nav>
           <a class="brand" href={IDP_PATHS.METADATA}>
-            Simple SAML Identity Provider{issuer ? ` (${issuer})` : ''}
+            Simple SAML Identity Provider{issuer ? ` (${issuer})` : ""}
           </a>
           <div>
             <a href={IDP_PATHS.METADATA}>IdP Metadata</a>
